@@ -204,11 +204,13 @@ bool TicTacToe::checkForDraw()
     // is the board full with no winner?
     // if any square is empty, return false
     // otherwise return true
+
+    //if theres a win, not a draw
     Player *winner = checkForWinner();
     if (winner != nullptr){
         return false;
     }
-    
+
     for(int y = 0; y < 3 ; ++y){
             for(int x = 0; x < 3; ++x){
                 //if bit doesnt exist, return false
