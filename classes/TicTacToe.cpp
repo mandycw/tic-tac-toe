@@ -204,6 +204,11 @@ bool TicTacToe::checkForDraw()
     // is the board full with no winner?
     // if any square is empty, return false
     // otherwise return true
+    Player *winner = checkForWinner();
+    if (winner != nullptr){
+        return false;
+    }
+    
     for(int y = 0; y < 3 ; ++y){
             for(int x = 0; x < 3; ++x){
                 //if bit doesnt exist, return false
@@ -297,7 +302,7 @@ void TicTacToe::setStateString(const std::string &s)
         //helpers
         int y = i / 3;
         int x = i % 3;
-
+        
         //if number is 0
         if (playerNumber == '0'){
             //set bit to nullptr
@@ -313,7 +318,6 @@ void TicTacToe::setStateString(const std::string &s)
             //match position on board
             newPiece->setPosition(_grid[y][x].getPosition());
         }
-        
         //if number is 2
         if (playerNumber == '2'){
             //create new piece based on player number
