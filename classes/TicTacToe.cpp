@@ -25,7 +25,7 @@
 // -----------------------------------------------------------------------------
 
 const int AI_PLAYER   = 1;      // index of the AI player (O)
-const int HUMAN_PLAYER= 0;      // index of the human player (X)
+const int HUMAN_PLAYER= -1;      // index of the human player (X)
 
 TicTacToe::TicTacToe()
 {
@@ -127,7 +127,7 @@ void TicTacToe::stopGame()
     // loop through the 3x3 array and call destroyBit on each square
     for(int y = 0; y < 3 ; ++y){
             for(int x = 0; x < 3; ++x){
-                nullptr;
+                _grid[y][x].destroyBit();
             }
         }
 }
@@ -297,40 +297,24 @@ void TicTacToe::setStateString(const std::string &s)
     // the string should always be valid, so you don't need to check its length or contents
     // but you can assume it will always be 9 characters long and only contain '0', '1', or '2'
     
-    
-    for (int i = 0; i < 9; ++i){
-        //make sure number is '1' and not 1
-        int playerNumber = s[i] - '0';
-        //helpers
-        int y = i / 3;
-        int x = i % 3;
-        
-        //if number is 0
-        if (playerNumber == '0'){
-            //set bit to nullptr
-            _grid[y][x].setBit(nullptr);
-        }
+    for(int y = 0; y < 3; ++y){
+        for(int x = 0; x < 3; ++x){
+            int index = y * 3 + x;
+            int playerNumber = s[index] - '0';
 
-        //if number is 1
-        if (playerNumber == '1'){
-            //create new piece based on player number
-            Bit *newPiece = PieceForPlayer(playerNumber);
+            if(playerNumber){
+            Bit *newPiece = PieceForPlayer(playerNumber -1);
             //place new piece
             _grid[y][x].setBit(newPiece);
             //match position on board
             newPiece->setPosition(_grid[y][x].getPosition());
-        }
-        //if number is 2
-        if (playerNumber == '2'){
-            //create new piece based on player number
-            Bit *newPiece = PieceForPlayer(playerNumber);
-            //place new piece
-            _grid[y][x].setBit(newPiece);
-            //match position on board
-            newPiece->setPosition(_grid[y][x].getPosition());
+            } else {
+                _grid[y][x].setBit(nullptr);
+            }
         }
     }
-
+    
+    
 
 }
 
@@ -342,4 +326,3 @@ void TicTacToe::updateAI()
 {
     // we will implement the AI in the next assignment!
 }
-
