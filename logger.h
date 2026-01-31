@@ -178,7 +178,7 @@ class Logger {
             //buffer to hold input text, with a max size of 256 characters
             char buffer[256];
             //copy input string to buffer
-            strncpy(buffer, input.c_str(), sizeof(buffer));
+            strncpy_s(buffer, input.c_str(), sizeof(buffer));
             //create input text box with ImGui, and update input string if the text changes
             if (ImGui::InputText(label.c_str(), buffer, sizeof(buffer))) {
                 input = std::string(buffer);

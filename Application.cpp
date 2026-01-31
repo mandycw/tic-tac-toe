@@ -42,7 +42,7 @@ namespace ClassGame {
                 ImGui::Text("Current Board State: %s", game->stateString().c_str());
 
                 if(game->checkForDraw() == false && game->checkForWinner() == nullptr){
-                    if(ImGui::Button("AI")){
+                    if(ImGui::Button("Play Against AI")){
                         
                     }
 
@@ -75,16 +75,13 @@ namespace ClassGame {
 
                     ImGui::SameLine();
 
-                    if(ImGui::Button("Reset")){
+                    if(ImGui::Button("Reset Game")){
 
                         game->stopGame();
                         Logger::getInstance().LogInfo("Game Was Reset.");
                     }
-                    
-
 
                 }
-
 
 
                 if (gameOver) {

@@ -67,8 +67,13 @@ void TicTacToe::setUpBoard()
                 _grid[y][x].initHolder(squares, "square.png", x, y );
             }
         }
+        if (gameHasAI()){
+        setAIPlayer(AI_PLAYER);
+        }
         startGame();
+        
 }
+
 
 //
 // about the only thing we need to actually fill out for tic-tac-toe
@@ -125,7 +130,7 @@ void TicTacToe::stopGame()
 {   
     // clear out the board
     // loop through the 3x3 array and call destroyBit on each square
-    for(int y = 0; y < 3 ; ++y){
+    for(int y = 0; y < 3; ++y){
             for(int x = 0; x < 3; ++x){
                 _grid[y][x].destroyBit();
             }
@@ -322,7 +327,83 @@ void TicTacToe::setStateString(const std::string &s)
 //
 // this is the function that will be called by the AI
 //
-void TicTacToe::updateAI() 
-{
-    // we will implement the AI in the next assignment!
+
+
+//board evaluation 
+void TicTacToe::updateAI(){
+    std::string state = stateString();
+    int bestVal = -10000;
+    int bestSquare = -1;
+    
+    for (int i = 0; i < 9; ++i){
+        if(state[i] == '0'){
+            state[i] = '2';
+            int newVal = -negamax(state, 9, 0, 0, HUMAN_PLAYER);
+            
+            if(newVal> bestVal){
+                bestSquare = i;
+                bestVal = newVal;
+            }
+            state[i] = '0';
+        }
+       
+    }
+    if (bestSquare != -1){
+        actionForEmptyHolder(&_grid[bestSquare/3][bestSquare%3]);
+        endTurn();
+    }
+    
 }
+
+
+int aiBoardEval(std::string& state){
+    int winCombos[8][3] = {
+        {0, 1, 2},
+        {3, 4, 5},
+        {6, 7, 8},
+        {0, 3, 6},
+        {1, 4, 7},
+        {2, 5, 8},
+        {0, 4, 8},
+        {2, 4, 6}
+        };
+
+    for(int i = 0; i < 8; ++i){
+        const int *triple = winCombos[i];
+        char p = state[triple[0]];
+        if(p !='0' && p == state[triple[1]] && p == state[triple[2]]){
+            return p ;
+        }
+    }
+    return '0';
+}
+
+int TicTacToe::negamax(std::string& state, int depth, int alpha, int beta, int playerColor){
+    char winner = aiBoardEval(state);
+    if (winner != '0'){
+        return -10000;
+    }
+    if (state.find('0') == std::string::npos) return '0';
+
+    
+    int bestVal = -10000;
+    for (int i = 0; i < 9; ++i) {
+        if (state[i] == '0') {
+            state[i] = playerColor == HUMAN_PLAYER ? '1' : '2';
+            int newVal = -negamax(state, depth - 1 , -alpha, -beta, -playerColor);
+            
+            if (newVal > bestVal) {
+                bestVal = newVal;
+            }
+            state[i] = '0';
+        }
+    }
+    return bestVal;
+
+}
+
+
+
+
+
+
