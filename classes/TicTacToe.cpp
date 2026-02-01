@@ -66,10 +66,11 @@ void TicTacToe::setUpBoard()
                 ImVec2 squares(x * 100, y * 100);
                 _grid[y][x].initHolder(squares, "square.png", x, y );
             }
+            if (_gameOptions.AIPlaying){
+                setAIPlayer(1);
         }
-        if (gameHasAI()){
-        setAIPlayer(AI_PLAYER);
         }
+        
         startGame();
         
 }
@@ -135,6 +136,7 @@ void TicTacToe::stopGame()
                 _grid[y][x].destroyBit();
             }
         }
+
 }
 
 //
@@ -331,23 +333,33 @@ void TicTacToe::setStateString(const std::string &s)
 
 //board evaluation 
 void TicTacToe::updateAI(){
+    //get current string
     std::string state = stateString();
+    //set bestVal to a very low number
     int bestVal = -10000;
+    //keep track of index of best move found
     int bestSquare = -1;
     
+    //loops through each tile on board
     for (int i = 0; i < 9; ++i){
+        //checks if square is empty
         if(state[i] == '0'){
+            // temp piece to simulate move, '2' = ai
             state[i] = '2';
+            //call negamax
             int newVal = -negamax(state, 9, 0, 0, HUMAN_PLAYER);
-            
+            //if new score > bsst score, replace it
             if(newVal> bestVal){
+                //remember square
                 bestSquare = i;
                 bestVal = newVal;
             }
+            //backtracking
             state[i] = '0';
         }
        
     }
+    //valid move found, place piece
     if (bestSquare != -1){
         actionForEmptyHolder(&_grid[bestSquare/3][bestSquare%3]);
         endTurn();
@@ -370,31 +382,41 @@ int aiBoardEval(std::string& state){
 
     for(int i = 0; i < 8; ++i){
         const int *triple = winCombos[i];
+        //first piece
         char p = state[triple[0]];
+        //returns p if there is a winning combo
         if(p !='0' && p == state[triple[1]] && p == state[triple[2]]){
+            //returns winner, '1' or '2'
             return p ;
         }
     }
+    //if no winner, 
     return '0';
 }
 
 int TicTacToe::negamax(std::string& state, int depth, int alpha, int beta, int playerColor){
+    //check for winner
     char winner = aiBoardEval(state);
     if (winner != '0'){
         return -10000;
     }
+    //draw
     if (state.find('0') == std::string::npos) return '0';
 
     
     int bestVal = -10000;
+
+
     for (int i = 0; i < 9; ++i) {
         if (state[i] == '0') {
+            //place curr players piece
             state[i] = playerColor == HUMAN_PLAYER ? '1' : '2';
+            //recursion
             int newVal = -negamax(state, depth - 1 , -alpha, -beta, -playerColor);
-            
             if (newVal > bestVal) {
                 bestVal = newVal;
             }
+            //backtrack
             state[i] = '0';
         }
     }

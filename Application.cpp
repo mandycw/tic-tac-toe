@@ -42,8 +42,10 @@ namespace ClassGame {
                 ImGui::Text("Current Board State: %s", game->stateString().c_str());
 
                 if(game->checkForDraw() == false && game->checkForWinner() == nullptr){
-                    if(ImGui::Button("Play Against AI")){
-                        
+                    if(ImGui::Button("Toggle AI")){
+                        game->_gameOptions.AIPlaying = !game->_gameOptions.AIPlaying;
+                        std::string string = std::string("AI is ") + (game->_gameOptions.AIPlaying ? "ON" : "OFF") + (" for the next match.");
+                        Logger::getInstance().LogInfo(string);
                     }
 
                     ImGui::SameLine();
