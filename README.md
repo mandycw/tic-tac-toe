@@ -5,3 +5,5 @@ I used the instructions provided to help guide me through implementation. While 
 For the AI, the negamax function recursively goes through each game state to check for a winner, draw and returns bestVal. The negamax function also uses aiBoardEval to get the winning triples and returns winner if there is a winning triple.
 
 UpdateAI gets the state of the board using stateString and uses negamax to get a score. If the score is better than the current score, replace it with the new score. Then, if a valid move is found, execute it. 
+
+Additionally, I added a toggle to the AI that will toggle on/off after the next win/draw. Hitting reset game before that will not toggle the AI. 

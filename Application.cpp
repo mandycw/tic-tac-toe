@@ -44,7 +44,7 @@ namespace ClassGame {
                 if(game->checkForDraw() == false && game->checkForWinner() == nullptr){
                     if(ImGui::Button("Toggle AI")){
                         game->_gameOptions.AIPlaying = !game->_gameOptions.AIPlaying;
-                        std::string string = std::string("AI is ") + (game->_gameOptions.AIPlaying ? "ON" : "OFF") + (" for the next match.");
+                        std::string string = std::string("AI is ") + (game->_gameOptions.AIPlaying ? "ON" : "OFF") + (" after the next win/draw.");
                         Logger::getInstance().LogInfo(string);
                     }
 
